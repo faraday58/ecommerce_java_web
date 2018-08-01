@@ -7,6 +7,7 @@ package control;
 
 import JavaBeans.Producto;
 import JavaBeans.ProductoMoneda;
+import cad.ProductoCad;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -85,39 +86,43 @@ public class ControlProducto extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String url = subirImagen(request);
-        String nombre= request.getParameter("nombre");
-        float precio=Float.parseFloat(request.getParameter("nombre"));
-        float precionuevo= Float.parseFloat(request.getParameter("precionuevo"));
+        recibirDatos(request);
         
-        float precioeur= Float.parseFloat(request.getParameter("precioeur"));
-        float precionuevoeur= Float.parseFloat(request.getParameter("precionuevoeur"));
+        String url =request.getAttribute("imagen").toString();
         
-        float preciousd= Float.parseFloat(request.getParameter("preciousd"));
-        float precionuevousd= Float.parseFloat(request.getParameter("precionuevousd"));
+        String nombre= request.getAttribute("nombre").toString();
+        float precio=Float.parseFloat(request.getAttribute("precio").toString());
+        float precionuevo= Float.parseFloat(request.getAttribute("precionuevo").toString());
         
-        float preciocup= Float.parseFloat(request.getParameter("preciocup"));
-        float precionuevocup= Float.parseFloat(request.getParameter("precionuevocup"));
+        float precioeur= Float.parseFloat(request.getAttribute("precioeur").toString());
+        float precionuevoeur= Float.parseFloat(request.getAttribute("precionuevoeur").toString());
         
-        int cantidad= Integer.parseInt(request.getParameter("cantidad") );
+        float preciousd= Float.parseFloat(request.getAttribute("preciousd").toString());
+        float precionuevousd= Float.parseFloat(request.getAttribute("precionuevousd").toString());
         
-        int marca = Integer.getInteger(request.getParameter("marca"));
-        int categoria =Integer.getInteger(request.getParameter("categoria"));
+        float preciocup= Float.parseFloat(request.getAttribute("preciocup").toString());
+        float precionuevocup= Float.parseFloat(request.getAttribute("precionuevocup").toString());
         
-        String descripcion = request.getParameter("decripcion");
+        int cantidad= Integer.parseInt(request.getAttribute("cantidad").toString());
         
-        boolean nuevo =request.getParameter("nuevo").equalsIgnoreCase("ON");
-        boolean recomendado = request.getParameter("recomendado").equalsIgnoreCase("ON") ;
-        boolean visible = request.getParameter("visible").equalsIgnoreCase("ON") ;
+        int marca = Integer.parseInt(request.getAttribute("marca").toString());
+        int categoria =Integer.parseInt(request.getAttribute("categoria").toString());
+        
+        String descripcion = request.getAttribute("descripcion").toString();
+        
+        boolean nuevo =request.getAttribute("nuevo").toString().equalsIgnoreCase("ON");
+        boolean recomendado = request.getAttribute("recomendado").toString().equalsIgnoreCase("ON");
+        boolean visible = request.getAttribute("visible").toString().equalsIgnoreCase("ON");
         
         
-        String accion = request.getParameter("accion");
+        String accion = request.getAttribute("accion").toString();
         
         Producto producto = new Producto();
         producto.setNombre(nombre);
         producto.setPrecio(precio);
         producto.setPrecio_nuevo(precionuevo);
-        producto.setCodigo_marca(categoria);
+        producto.setCodigo_categoria(categoria);
+        producto.setCodigo_marca(marca);
         producto.setDescripcion(descripcion);
         producto.setImg(url);
         producto.setNuevo(nuevo);
@@ -141,13 +146,26 @@ public class ControlProducto extends HttpServlet {
         prodmonedaeur.setPrecionuevo(precionuevocup);
         
         
-        
+        if(accion.equalsIgnoreCase("Registrar") ){
+            if( ProductoCad.registrarProducto(producto, prodmonedaeur, prodmonedausd, prodmonedacup))
+            {
+                request.setAttribute("mensaje", "<p style='color:green'>  Producto registrado </p>");
+                
+            }else{
+                request.setAttribute("mensaje", "<p style='color:red'>  Producto no registrado </p>");
+            }                  
+            
+        }else{
+            request.setAttribute("mensaje", "<p style='color:yellow'>  Acción desconocida </p>");
+            
+        }
+        request.getRequestDispatcher("Admin").forward(request,response);
         //response.sendRedirect("imagenes/" +url);
         
         
     }
     
-    private String subirImagen(HttpServletRequest request) 
+    private void recibirDatos(HttpServletRequest request) 
     {
         
         try {
@@ -177,10 +195,13 @@ public class ControlProducto extends HttpServlet {
                     if(item.getContentType().contains("image"))
                     {
                         item.write(imagen);
-                        request.setAttribute("subida", true);
-                        return nombre;
+                        request.setAttribute(item.getFieldName(), nombre );                        
                     }
+                }else
+                {
+                    request.setAttribute(item.getFieldName(), item.getString());
                 }
+                
             }
             
         } catch (FileUploadException ex) {
@@ -191,7 +212,7 @@ public class ControlProducto extends HttpServlet {
             request.setAttribute("subida", false);
             Logger.getLogger(ControlProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
-         return "";
+         
        
     }
     

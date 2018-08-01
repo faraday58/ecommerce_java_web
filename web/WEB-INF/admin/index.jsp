@@ -86,8 +86,8 @@
                                            <br/>
                                            Marca: <select name="marca">
                                                 <option>Selecciona una Marca</option>
-                                                <% for(Marca marca:MarcaCad.ListarMarcas()){ %>
-                                                <option value="<%= marca.getCodigo()  %>"> <%= marca.getNombre() %></option>
+                                                <% for(Marca m:MarcaCad.ListarMarcas()){ %>
+                                                <option value="<%= m.getCodigo()  %>"> <%= m.getNombre() %></option>
                                                 <%} %>
                                             </select>
                                             Categoria: <select name="categoria">
@@ -97,10 +97,10 @@
                                                 <%} %>
                                                 
                                             </select>
-                                            Descripción: <textarea name="decripcion" rows="4" cols="20" placeholder="Descripción" required>
+                                            Descripción: <textarea name="descripcion" rows="4" cols="20" placeholder="Descripción" required>
                                             </textarea>
                                             Nuevo?:<input type="checkbox" name="nuevo" value="ON" checked="checked" />
-                                            Recomendado?:<input type="checkbox" name="recomendado" value="OFF" />
+                                            Recomendado?:<input type="checkbox" name="recomendado" value="ON" />
                                             Visible?: <input type="checkbox" name="visible" checked="checked" value="ON" />
                                             <hr/>
                                             Seleccionar imagen a cargar:<input type="file" name="imagen" value="Seleccionar una imagen" required/>
