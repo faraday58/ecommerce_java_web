@@ -40,7 +40,7 @@
 				</div>
 				
 				<div class="col-sm-10 clearfix">
-                                    
+                                    ${mensaje}
                                     <h3>Gestionar Producto</h3>
                                     <form action="ControlProducto" enctype="multipart/form-data"  method="post">
                                         <div class="form-one">
@@ -100,7 +100,7 @@
                                             Descripción: <textarea name="descripcion" rows="4" cols="20" placeholder="Descripción" required>
                                             </textarea>
                                             Nuevo?:<input type="checkbox" name="nuevo" value="ON" checked="checked" />
-                                            Recomendado?:<input type="checkbox" name="recomendado" value="ON" />
+                                            Recomendado?:<input type="checkbox" checked="checked" name="recomendado" value="ON" />
                                             Visible?: <input type="checkbox" name="visible" checked="checked" value="ON" />
                                             <hr/>
                                             Seleccionar imagen a cargar:<input type="file" name="imagen" value="Seleccionar una imagen" required/>
